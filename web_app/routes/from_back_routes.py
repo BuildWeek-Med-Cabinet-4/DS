@@ -2,27 +2,47 @@
 import requests
 import json
 from flask import Blueprint, request, jsonify
+import pandas as pd
+import re
 
 from_back_routes = Blueprint("from_back_routes", __name__)
 
+DF_FEATURES = ['Strain', 'Type', 'Effects', "Flavor", 'Description']
+def clean_payload(pay_load):
+    input_strain = pd.DataFrame.from_records(pay_load, index=[0], columns=['Strain', 'Type', 'Effects', 'Flavor', 'Description'])
 
-def clean_payload(pay_load):    # helper function to clean data, check Jon's code
-    return "Cleaned up data"
+    for each in DF_FEATURES:
+      input_strain[each] = input_strain[each].apply(lambda x: x.lower())
+      input_strain[each] = input_strain[each].apply(lambda x: re.sub('[^a-zA-Z 0-9]', ' ', x))
+    
+    # Combines text
+    input_strain['combined_text'] = input_strain['Type'] + ' ' + input_strain['Effects'] + ' ' + input_strain['Flavor'] + input_strain['Description'] + ' '
+    
+    return input_strain
+
+
+def preprocessing(df):
+    pass
 
 
 @from_back_routes.route('/send/', methods = ["POST"])
 def parse_json():                         
     pyld = request.get_json()
+    df = clean_payload(pyld)
 
-    Strain =pyld ["Strain"]
-    Type = pyld ["Type"]
-    Rating = pyld ["Rating"]
-    Effects = pyld ["Effects"]
-    Flavor = pyld ["Flavor"]
-    Description = pyld ["Description"]
+    return df.to_json()
 
 
-    return '''{} {} {} {} {} {}''' .format(Strain, Type, Rating, Effects, Flavor, Description)
+
+    #Strain =pyld ["Strain"]
+    #Type = pyld ["Type"]
+    #Rating = pyld ["Rating"]
+    #Effects = pyld ["Effects"]
+    #Flavor = pyld ["Flavor"]
+    #Description = pyld ["Description"]
+
+
+    #return '''{} {} {} {} {} {}''' .format(Strain, Type, Rating, Effects, Flavor, Description)
 
 @from_back_routes.route('/send/json')
 def parse_json2():
