@@ -1,13 +1,98 @@
+
 import requests
 import json
+from flask import Blueprint, request, jsonify
 
+from_back_routes = Blueprint("from_back_routes", __name__)
+
+
+def clean_payload(pay_load):    # helper function to clean data, check Jon's code
+    return "Cleaned up data"
+
+
+@from_back_routes.route('/send/', methods = ["POST"])
+def parse_json():                         
+    pyld = request.get_json()
+
+    Strain =pyld ["Strain"]
+    Type = pyld ["Type"]
+    Rating = pyld ["Rating"]
+    Effects = pyld ["Effects"]
+    Flavor = pyld ["Flavor"]
+    Description = pyld ["Description"]
+
+
+    return '''{} {} {} {} {} {}''' .format(Strain, Type, Rating, Effects, Flavor, Description)
+
+@from_back_routes.route('/send/json')
+def parse_json2():
+    
+    backend_url1 = f"https://raw.githubusercontent.com/jae-finger/med_cabinet_4/master/test_strain.json"
+    response1 = requests.get(backend_url1)
+    res_text= response1.text
+    parsed_response1 = json.loads(res_text)
+
+    return jsonify(parsed_response1)
+
+
+
+    #Strain =parsed_response1 ["Strain"]
+    #Type = parsed_response1 ["Type"]
+    ##Rating = parsed_response1 ["Rating"]
+    #Effects = parsed_response1 ["Effects"]
+    #Flavor = parsed_response1 ["Flavor"]
+    #Description = parsed_response1 ["Description"]
+#
+    #return jsonify(parsed_response1)
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+''''
 # Using requests
 backend_url1 = f"https://api.openaq.org/v1/cities"
 backend_url2 = f"https://api.openaq.org/v1/cities"
 backend_url3 = f"https://api.openaq.org/v1/countries"
 backend_url4 = f"https://api.openaq.org/v1/fetches"
 
+
 backend_list=[backend_url1, backend_url2, backend_url3, backend_url4]
+
+
+@from_back_routes.route('/parse')
+def parse_json():
+    for link in backend_list:
+        response=requests.get(link)
+        #parse_json=json.loads(response)
+
+        breakpoint()
+    return response
+
+
+
+
 
 response1 = requests.get(backend_url1)
 response2 = requests.get(backend_url2)
@@ -18,3 +103,4 @@ parsed_response1 = json.loads(response1.text)
 parsed_response1 = json.loads(response2.text)
 parsed_response1 = json.loads(response3.text)
 parsed_response1 = json.loads(response4.text)
+'''
