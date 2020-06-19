@@ -2,9 +2,9 @@
 A datascience api for serving up cannabis strains to a webdev team.
 
 ## Usage
-TODO: Update Heroku address
-TODO: Write up endpoints with descriptions
-TODO: Write up json payload structure
+TODO: Update Heroku address  
+TODO: Write up endpoints with descriptions  
+TODO: Write up json payload structure  
 
 ## Project structure
 All data sets will live [here](https://github.com/BuildWeek-Med-Cabinet-4/DS/tree/master/data)  
