@@ -18,7 +18,7 @@ You will receive a response, structured exactly the same, with a recommendation.
 
 ## Project structure
 All data sets will live [here](https://github.com/BuildWeek-Med-Cabinet-4/DS/tree/master/data)  
-All pickled models will live [here](https://github.com/BuildWeek-Med-Cabinet-4/DS/tree/master/models)
+All pickled models will live [here](https://github.com/BuildWeek-Med-Cabinet-4/DS/tree/master/models)  
 All notebooks will live [here](https://github.com/BuildWeek-Med-Cabinet-4/DS/tree/master/notebooks)  
 API lives [here](https://github.com/BuildWeek-Med-Cabinet-4/DS/tree/master/web_app)
 
