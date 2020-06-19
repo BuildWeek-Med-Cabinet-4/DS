@@ -7,6 +7,7 @@ Send a `POST` request to `http://herokuplaceholder.com/send` with a json payload
 ```Python
 {
     "UserID": "dbkeyuser123",
+    "Strain": "User_Strain",
     "Type": "Sativa",
     "Rating": 0, #Leave as a zero,
     "Effects": "Uplifed, Happy, Relaxed, Energetic, Creative",
