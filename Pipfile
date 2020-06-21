@@ -6,9 +6,9 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-flask = "*"
-flask-sqlalchemy = "*"
-flask-migrate = "*"
+Flask = "*"
+Flask-SQLAlchemy = "*"
+Flask-Migrate = "*"
 python-dotenv = "*"
 requests = "*"
 gunicorn = "*"
@@ -17,6 +17,7 @@ marshmallow = "*"
 marshmallow-sqlalchemy = "*"
 flask-marshmallow = "*"
 pandas = "*"
+scikit-learn = "~=0.22.2.post1"
 
 [requires]
 python_version = "3.7"

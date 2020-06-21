@@ -2,7 +2,6 @@
 import os
 from dotenv import load_dotenv
 from flask import Flask
-from web_app.routes.result_routes import result_routes
 from web_app.routes.from_back_routes import from_back_routes
 
 
@@ -14,8 +13,6 @@ def create_app():
   
     app.config["SQLALCHEMY_DATABASE_TRACKING"] = False
 
-    
-    app.register_blueprint(result_routes)
     app.register_blueprint(from_back_routes)
 
     return app
