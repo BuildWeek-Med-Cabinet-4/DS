@@ -6,6 +6,7 @@ import pandas as pd
 import re
 import os
 
+
 # ML Engineers imports. Must be formated like this or else pickled model won't
 # work
 from sklearn.feature_extraction import text 
@@ -114,10 +115,12 @@ def parse_json():
     clean_recs = clean_response(recs, pyld['UserID'])
 
     print('Sending response')
+
     return clean_recs
 
 
-@from_back_routes.route('/send/json')
+
+@from_back_routes.route('/')
 def parse_json2():
     
     backend_url1 = f"https://raw.githubusercontent.com/jae-finger/med_cabinet_4/master/test_strain.json"
