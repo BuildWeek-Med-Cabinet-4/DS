@@ -1,7 +1,7 @@
 
 import requests
 import json
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, render_template 
 import pandas as pd
 import re
 import os
@@ -120,12 +120,23 @@ def parse_json():
 
 
 
-@from_back_routes.route('/')
+@from_back_routes.route('/json')
 def parse_json2():
     
     backend_url1 = f"https://raw.githubusercontent.com/jae-finger/med_cabinet_4/master/test_strain.json"
     response1 = requests.get(backend_url1)
     res_text= response1.text
-    parsed_response1 = json.loads(res_text)
+    parsed_response1 = json.loads(res_text)    
 
     return jsonify(parsed_response1)
+
+
+
+@from_back_routes.route('/')
+def land_page():
+    return render_template("index.html", message = "A datascience API for serving up cannabis strains to a webdev team")
+
+
+@from_back_routes.route('/references')
+def refer_page():
+    return render_template("references.html", message = "A datascience API for serving up cannabis strains to a webdev team")

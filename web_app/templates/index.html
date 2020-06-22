@@ -1,0 +1,38 @@
+{% extends "bootstrap_layout.html" %}
+{% set active_page = "index" %}
+
+{% block content %}
+
+    <h1>Strain Recommender</h1>
+
+    <p>{{ message }}</p>
+
+    <h4>Address</h4>
+
+    <a href=" https://medicabi.herokuapp.com/"> Go to </a>
+
+    <br>
+    <br>
+    <br>
+   
+    <h4>Usage</h4>
+
+    <p>Send a <b>POST request</b> to <b>https://medicabi.herokuapp.com//send</b> with a json payload structured like this:</p>
+
+    </p>
+    <div class="highlight highlight-source-python"><pre>{
+        <span class="pl-s">"UserID"</span>: <span class="pl-s">"dbkeyuser123"</span>, <span class="pl-c">#db key for our user</span>
+        <span class="pl-s">"Strain"</span>: <span class="pl-s">"User_Strain"</span>, <span class="pl-c">#Leave as User_Strain when POSTing to us</span>
+        <span class="pl-s">"Type"</span>: <span class="pl-s">"Sativa"</span>,
+        <span class="pl-s">"Rating"</span>: <span class="pl-c1">0</span>, <span class="pl-c">#Leave as a zero when POSTing to us</span>
+        <span class="pl-s">"Effects"</span>: <span class="pl-s">"Uplifed, Happy, Relaxed, Energetic, Creative"</span>,
+        <span class="pl-s">"Flavor"</span>: <span class="pl-s">"Spicy, Herbal, Sage, Woody"</span>,
+        <span class="pl-s">"Description"</span>: <span class="pl-s">"a sativadominant hybrid bred in spain by medical seeds co the breeders claim to guard the secret genetics due to security reasons but regardless of its genetic heritage it is a thc powerhouse with a sweet and spicy bouquet subtle fruit flavors mix with an herbal musk to produce uplifting sativa effects one specific phenotype is noted for having a pungent odor that fills a room similar to burning incense"</span>
+    }</pre></div>
+    <p>You will receive a response, structured exactly the same, with a details on our recommended strain.  In the response <code>Strain</code> will list the recommended strain name and <code>Rating</code> is an average user rating from our sourced dataset.</p>
+
+
+
+
+
+{% endblock %}
