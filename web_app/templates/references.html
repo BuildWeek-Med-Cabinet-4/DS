@@ -1,2 +1,45 @@
 {% extends "bootstrap_layout.html" %}
 {% set active_page = "references" %}
+
+{% block content %}
+
+    <h1>Strain Recommender</h1>
+
+    <p>{{ message }}</p>
+    
+    <br>
+ 
+
+    <h4>Project structure</h4>
+
+    <p>All data sets will live <a href="https://github.com/BuildWeek-Med-Cabinet-4/DS/tree/master/data">here</a><br>
+    All pickled models will live <a href="https://github.com/BuildWeek-Med-Cabinet-4/DS/tree/master/models">here</a><br>
+    All notebooks will live <a href="https://github.com/BuildWeek-Med-Cabinet-4/DS/tree/master/notebooks">here</a><br>
+    API lives <a href="https://github.com/BuildWeek-Med-Cabinet-4/DS/tree/master/web_app">here</a></p>
+
+    <br>
+
+    <h4>References</h4>
+
+    <p>
+        <a href="https://www.kaggle.com/kingburrito666/cannabis-strains" rel="nofollow">Main Dataset</a><br>
+        <a href="https://trello.com/b/6fHmnowA/med-cabinet-4" rel="nofollow">Team Trello</a><br>
+        <a href="https://www.notion.so/Git-Workflow-34f9b468dcf74a669aff0d3797870d37" rel="nofollow">Git Workflow</a>
+    </p>
+
+    <br>
+        
+    <h4>Curl commands for testing api</h4>
+
+    <div class="highlight highlight-source-shell"><pre>curl --location --request POST <span class="pl-s"><span class="pl-pds">'</span>https://medicabi.herokuapp.com//send<span class="pl-pds">'</span></span> \
+        --header <span class="pl-s"><span class="pl-pds">'</span>Content-Type: application/json<span class="pl-pds">'</span></span> \
+        --data-raw <span class="pl-s"><span class="pl-pds">'</span>{"UserID": "dbkeyuser123", </span>
+        <span class="pl-s">"Strain": "User_Strain", </span>
+        <span class="pl-s">"Type": "Sativa",</span>
+        <span class="pl-s">"Rating": 0, </span>
+        <span class="pl-s">"Effects": "Uplifed, Happy, Relaxed, Energetic, Creative", </span>
+        <span class="pl-s">"Flavor": "Spicy, Herbal, Sage, Woody", </span>
+        <span class="pl-s">"Description": "a sativadominant hybrid bred in spain by medical seeds co the breeders claim to guard the secret genetics due to security reasons but regardless of its genetic heritage it is a thc powerhouse with a sweet and spicy bouquet subtle fruit flavors mix with an herbal musk to produce uplifting sativa effects one specific phenotype is noted for having a pungent odor that fills a room similar to burning incense"}<span class="pl-pds">'</span></span></pre></div>
+
+
+{% endblock %}
