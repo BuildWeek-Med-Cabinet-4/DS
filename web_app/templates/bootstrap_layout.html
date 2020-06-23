@@ -6,6 +6,7 @@
     {% endblock %}
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+     
   </head>
 
   <body a link = "red">
@@ -33,11 +34,14 @@
       ('/references', 'references', 'References')
     ] -%}
     {% set active_page = active_page|default('index') -%}
-    <nav class="navbar navbar-light" style="background-color: #94A830">
+    <nav class="navbar navbar-light fixed-top" style="background-color: #008000 ">
       <a class="navbar-brand" href="/">Cannabis: MediCabi</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
+
+      
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <ul class="nav navbar-nav ml-auto">
           {% for href, id, link_text in nav_links %}
@@ -66,7 +70,7 @@
       <div id="footer">
         <hr>
         &copy; Copyright 2020 Jon Finger, Jesse 'Felix' Peone, JenBanks |
-        <a href="https://github.com/BuildWeek-Med-Cabinet-4/DS">source</a>
+        <a href="https://github.com/BuildWeek-Med-Cabinet-4/DS" style="color:#008000">source</a>
       </div>
     </div>
 
