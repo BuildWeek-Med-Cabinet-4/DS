@@ -1,21 +1,35 @@
 # DS Med Cabinet 4 api
-A datascience api for serving up cannabis strains to a webdev team.
+A simple datascience api that receives user inputs as a json payload, processes that payload using a natural language processing model, and returns a recommended cannabis strain as a json object.
 
 ## Usage
-TODO: Update address when deployed to Heroku  
-Send a `POST` request to `http://herokuplaceholder.com/send` with a json payload structured like this:
-```Python
+### Base URL
+https://medicabi.herokuapp.com
+### POST */send*
+Takes a json object containing user inputs, and returns a json object with recommended strain.
+
+#### Request:
+```JSON
 {
-    "UserID": "dbkeyuser123", #db key for our user
-    "Strain": "User_Strain", #Leave as User_Strain when POSTing to us
+    "UserID": "dbkeyuser123",
+    "Strain": "User_strain", 
     "Type": "Sativa",
-    "Rating": 0, #Leave as a zero when POSTing to us
-    "Effects": "Uplifed, Happy, Relaxed, Energetic, Creative",
-    "Flavor": "Spicy, Herbal, Sage, Woody",
-    "Description": "a sativadominant hybrid bred in spain by medical seeds co the breeders claim to guard the secret genetics due to security reasons but regardless of its genetic heritage it is a thc powerhouse with a sweet and spicy bouquet subtle fruit flavors mix with an herbal musk to produce uplifting sativa effects one specific phenotype is noted for having a pungent odor that fills a room similar to burning incense"
+    "Effects": "Happy, energetic, and creative", 
+    "Flavor": "Sour, fruity, pineapple, citrus", 
+    "Description": "I'm bummed most the time.  I'm just looking to feel good, and keep my creative juices flowing. I'm an artist and I find some herb helps my art."
 }
 ```  
-You will receive a response, structured exactly the same, with a details on our recommended strain.  In the response `Strain` will list the recommended strain name and `Rating` is an average user rating from our sourced dataset.
+
+#### Response:
+```JSON
+{
+    "UserID": "dbkeyuser123",
+    "Strain": "Golden-Pineapple",
+    "Type": "hybrid",
+    "Effects": "Happy,Euphoric,Uplifted,Relaxed,Creative",
+    "Flavor": "Pineapple,Tropical,Citrus",
+    "Description": "Golden Pineapple is a hybrid cross between Golden Goat and Pineapple Kush that delivers creative, uplifting effects with a fruity, tropical flavor. Its aroma is remarkably similar to sour pineapple, providing a flavorful escape from stress, anxiety, and depression. Golden Pineapple’s engaged, active effects will give you the energy you need to keep going throughout your day, although in larger doses, it can be difficult to direct that focus effectively."
+}
+```
 
 ## Project structure
 All data sets will live [here](https://github.com/BuildWeek-Med-Cabinet-4/DS/tree/master/data)  
@@ -30,13 +44,12 @@ API lives [here](https://github.com/BuildWeek-Med-Cabinet-4/DS/tree/master/web_a
 
 ### Curl commands for testing api
 ```sh
-curl --location --request POST 'http://127.0.0.1:5000/send' \
+curl --location --request POST 'https://medicabi.herokuapp.com/send' \
 --header 'Content-Type: application/json' \
---data-raw '{"UserID": "dbkeyuser123", 
-"Strain": "User_Strain", 
+--data-raw '{"UserID": "dbkeyuser123",
+"Strain": "User_strain", 
 "Type": "Sativa",
-"Rating": 0, 
-"Effects": "Uplifed, Happy, Relaxed, Energetic, Creative", 
-"Flavor": "Spicy, Herbal, Sage, Woody", 
-"Description": "a sativadominant hybrid bred in spain by medical seeds co the breeders claim to guard the secret genetics due to security reasons but regardless of its genetic heritage it is a thc powerhouse with a sweet and spicy bouquet subtle fruit flavors mix with an herbal musk to produce uplifting sativa effects one specific phenotype is noted for having a pungent odor that fills a room similar to burning incense"}'
+"Effects": "Happy, energetic, and creative", 
+"Flavor": "Sour, fruity, pineapple, citrus", 
+"Description": "I'\''m bummed most the time.  I'\''m just looking to feel good, and keep my creative juices flowing. I'\''m an artist and I find some herb helps my art."}'
 ```

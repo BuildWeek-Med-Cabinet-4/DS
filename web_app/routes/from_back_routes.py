@@ -6,7 +6,7 @@ import pandas as pd
 import re
 import os
 
-
+# *************************************************************************** #
 # ML Engineers imports. Must be formated like this or else pickled model won't
 # work
 from sklearn.feature_extraction import text 
@@ -16,14 +16,17 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 # Deployment
 import pickle
+# *************************************************************************** #
 
 from_back_routes = Blueprint("from_back_routes", __name__)
 
 DF_FEATURES = ['Strain', 'Type', 'Effects', "Flavor", 'Description']
+
 def clean_payload(pay_load):
     '''
     Quick helper function for cleaning the payload
     '''
+
     input_strain = pd.DataFrame.from_records(pay_load, index=[0], columns=['UserID', 'Strain', 'Type', 'Effects', 'Flavor', 'Description'])
 
     for each in DF_FEATURES:
@@ -40,7 +43,7 @@ def safe_paths():
     Quick helper to make platfor independant file paths
     Returns - (vectorizer, df, dtm)
     '''
-    vectorizer_path = os.path.join('models', 
+    vect_path = os.path.join('models', 
                                     'pickled_vectorizer.pkl')
 
     df_path = os.path.join('models', 
@@ -49,7 +52,25 @@ def safe_paths():
     dtm_path = os.path.join('models', 
                             'pickled_dtm.pkl')
 
-    return (vectorizer_path, df_path, dtm_path)
+    return (vect_path, df_path, dtm_path)
+
+def load_models():
+    '''
+    Helper function for loading pickled models
+    '''
+    vect_path, df_path, dtm_path = safe_paths()
+
+    # load the model from disk
+    pickled_vectorizer = pickle.load(open(vect_path, 'rb'))
+    strain_list = pd.read_pickle(df_path)
+    pickled_dtm = pickle.load(open(dtm_path, 'rb'))
+
+    return (pickled_vectorizer, strain_list, pickled_dtm)
+
+# *************************************************************************** #
+# Loading the pickled models in global memory, to increase response time of api
+PICKLED_VECTORIZER, STRAIN_LIST, PICKLED_DTM = load_models()
+# *************************************************************************** #
 
 def find_rec_strains(p_strain):
     """
@@ -57,17 +78,16 @@ def find_rec_strains(p_strain):
     It creates a JSON containing info on the 5 most similar strains
     """
 
-    vectorizer_path, df_path, dtm_path = safe_paths()
+    # vect_path, df_path, dtm_path = safe_paths()
 
-    # load the model from disk
-    filename = 'pickled_vectorizer.pkl'
-    pickled_vectorizer = pickle.load(open(vectorizer_path, 'rb'))
-    strain_list = pd.read_pickle(df_path)
-    pickled_dtm = pickle.load(open(dtm_path, 'rb'))
+    # # load the model from disk
+    # pickled_vectorizer = pickle.load(open(vect_path, 'rb'))
+    # strain_list = pd.read_pickle(df_path)
+    # pickled_dtm = pickle.load(open(dtm_path, 'rb'))
 
     # Transforms preprocessed strain and appends
-    input_dtm = pd.DataFrame((pickled_vectorizer.transform(p_strain['combined_text'])).todense(), columns=pickled_vectorizer.get_feature_names())
-    dtm_1 = (pickled_dtm.append(input_dtm)).reset_index(drop=True)
+    input_dtm = pd.DataFrame((PICKLED_VECTORIZER.transform(p_strain['combined_text'])).todense(), columns=PICKLED_VECTORIZER.get_feature_names())
+    dtm_1 = (PICKLED_DTM.append(input_dtm)).reset_index(drop=True)
 
     # Calculate similarity of all strains
     cosine_df = pd.DataFrame(cosine_similarity(dtm_1))
@@ -77,7 +97,7 @@ def find_rec_strains(p_strain):
     cos_results = cosine_results['index'].values.tolist()
     recs = []
     for each in cos_results:
-        temp = strain_list.iloc[each]
+        temp = STRAIN_LIST.iloc[each]
         recs.append(temp)
         
     recs = pd.DataFrame(recs).iloc[0].to_json()
@@ -99,7 +119,6 @@ def clean_response(recs, userID):
 
     return json.dumps(cleaned)
 
-
 @from_back_routes.route('/send/', methods = ["POST"])
 def parse_json():
     print('Fetching payload')
@@ -118,8 +137,6 @@ def parse_json():
 
     return clean_recs
 
-
-
 @from_back_routes.route('/json')
 def parse_json2():
     
@@ -130,12 +147,9 @@ def parse_json2():
 
     return jsonify(parsed_response1)
 
-
-
 @from_back_routes.route('/')
 def land_page():
     return render_template("index.html", message = "A datascience API for serving up cannabis strains to a webdev team")
-
 
 @from_back_routes.route('/references')
 def refer_page():
