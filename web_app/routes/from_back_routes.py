@@ -10,11 +10,11 @@ import os
 # *************************************************************************** #
 # ML Engineers imports. Must be formated like this or else pickled model won't
 # work
-from sklearn.feature_extraction import text 
+from sklearn.feature_extraction import text
 # TFIDF / Word Embeddings
 from sklearn.feature_extraction.text import TfidfVectorizer
 # Similarity
-from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.neighbors import NearestNeighbors
 # Deployment
 import pickle
 # *************************************************************************** #
@@ -28,55 +28,63 @@ from_back_routes = Blueprint("from_back_routes", __name__)
 
 DF_FEATURES = ['Strain', 'Type', 'Effects', "Flavor", 'Description']
 
+
 def clean_payload(pay_load):
     '''
     Quick helper function for cleaning the payload
     '''
 
-    input_strain = pd.DataFrame.from_records(pay_load, index=[0], columns=['UserID', 'Strain', 'Type', 'Effects', 'Flavor', 'Description'])
+    input_strain = pd.DataFrame.from_records(pay_load, index=[0], columns=[
+                                             'UserID', 'Strain', 'Type', 'Effects', 'Flavor', 'Description'])
 
     for each in DF_FEATURES:
-      input_strain[each] = input_strain[each].apply(lambda x: x.lower())
-      input_strain[each] = input_strain[each].apply(lambda x: re.sub('[^a-zA-Z 0-9]', ' ', x))
-    
+        input_strain[each] = input_strain[each].apply(lambda x: x.lower())
+        input_strain[each] = input_strain[each].apply(
+            lambda x: re.sub('[^a-zA-Z 0-9]', ' ', x))
+
     # Combines text
-    input_strain['combined_text'] = input_strain['Type'] + ' ' + input_strain['Effects'] + ' ' + input_strain['Flavor'] + input_strain['Description'] + ' '
-    
+    input_strain['combined_text'] = input_strain['Type'] + ' ' + input_strain['Effects'] + \
+        ' ' + input_strain['Flavor'] + input_strain['Description'] + ' '
+
     return input_strain
+
 
 def safe_paths():
     '''
     Quick helper to make platfor independant file paths
     Returns - (vectorizer, df, dtm)
     '''
-    vect_path = os.path.join('models', 
-                                    'pickled_vectorizer.pkl')
+    model_path = os.path.join('models',
+                              'pickled_model.pkl')
 
-    df_path = os.path.join('models', 
-                            'pickled_df.pkl')
+    df_path = os.path.join('models',
+                           'pickled_df.pkl')
 
-    dtm_path = os.path.join('models', 
-                            'pickled_dtm.pkl')
+    vect_path = os.path.join('models',
+                             'pickled_vect.pkl')
 
-    return (vect_path, df_path, dtm_path)
+    return (model_path, df_path, vect_path)
+
 
 def load_models():
     '''
     Helper function for loading pickled models
     '''
-    vect_path, df_path, dtm_path = safe_paths()
+    model_path, df_path, vect_path = safe_paths()
 
     # load the model from disk
-    pickled_vectorizer = pickle.load(open(vect_path, 'rb'))
+    pickled_model = pickle.load(open(model_path, 'rb'))
     strain_list = pd.read_pickle(df_path)
-    pickled_dtm = pickle.load(open(dtm_path, 'rb'))
+    pickled_vect = pickle.load(open(vect_path, 'rb'))
 
-    return (pickled_vectorizer, strain_list, pickled_dtm)
+    return (pickled_model, strain_list, pickled_vect)
+
 
 # *************************************************************************** #
 # Loading the pickled models in global memory, to increase response time of api
-PICKLED_VECTORIZER, STRAIN_LIST, PICKLED_DTM = load_models()
+PICKLED_MODEL, STRAIN_LIST, PICKLED_VECT = load_models()
 # *************************************************************************** #
+
 
 def find_rec_strains(p_strain):
     """
@@ -91,25 +99,25 @@ def find_rec_strains(p_strain):
     # strain_list = pd.read_pickle(df_path)
     # pickled_dtm = pickle.load(open(dtm_path, 'rb'))
 
-    # Transforms preprocessed strain and appends
-    input_dtm = pd.DataFrame((PICKLED_VECTORIZER.transform(p_strain['combined_text'])).todense(), columns=PICKLED_VECTORIZER.get_feature_names())
-    dtm_1 = (PICKLED_DTM.append(input_dtm)).reset_index(drop=True)
+    # Transforms preprocessed strain
+    trans_strain = PICKLED_VECT.transform(
+        p_strain['combined_text'])
+    trans_strain = trans_strain.todense()
 
-    # Calculate similarity of all strains
-    cosine_df = pd.DataFrame(cosine_similarity(dtm_1))
+    # Predit KNN for strain strains
+    pred_strains = PICKLED_MODEL.kneighbors(trans_strain)
 
-    #Grab top 5 results that are most similar to user inputted strain
-    cosine_results = (pd.DataFrame(cosine_df[cosine_df[0] < 1][len(cosine_df)-1].sort_values(ascending=False)[1:6])).reset_index()
-    cos_results = cosine_results['index'].values.tolist()
+    # Grab top 5 results that are most similar to user inputted strain
     recs = []
-    for each in cos_results:
+    for each in pred_strains[1][0]:
         temp = STRAIN_LIST.iloc[each]
         recs.append(temp)
-        
+
     recs = pd.DataFrame(recs).iloc[0].to_json()
     print('Created predicted_recs.json')
 
     return recs
+
 
 def clean_response(recs, userID):
     features = DF_FEATURES
@@ -123,11 +131,16 @@ def clean_response(recs, userID):
     for f in features:
         cleaned[f] = temp[f]
 
-    #print(cleaned)
+    # print(cleaned)
 
     return cleaned
 
+<<<<<<< HEAD
 @from_back_routes.route('/send', methods = ["POST"])
+=======
+
+@from_back_routes.route('/send', methods=["POST"])
+>>>>>>> 2b094849fd2fce124aa6e4b62b770178d4300fe7
 @cross_origin()
 def parse_json():
     print('Fetching payload')
@@ -144,9 +157,9 @@ def parse_json():
 
     print('Sending response')
 
-    #print(clean_recs)
+    # print(clean_recs)
 
-    #print(jsonify(clean_recs))
+    # print(jsonify(clean_recs))
 
     # json_recs = jsonify(
     #     UserID = clean_recs['UserID'],
@@ -158,26 +171,29 @@ def parse_json():
     # )
 
     response = app.response_class(
-        json.dumps(clean_recs, sort_keys = False, indent = 4),
-        mimetype = app.config['JSONIFY_MIMETYPE']
+        json.dumps(clean_recs, sort_keys=False, indent=4),
+        mimetype=app.config['JSONIFY_MIMETYPE']
     )
 
     return response
 
+
 @from_back_routes.route('/json')
 def parse_json2():
-    
+
     backend_url1 = f"https://raw.githubusercontent.com/jae-finger/med_cabinet_4/master/test_strain.json"
     response1 = requests.get(backend_url1)
-    res_text= response1.text
-    parsed_response1 = json.loads(res_text)    
+    res_text = response1.text
+    parsed_response1 = json.loads(res_text)
 
     return jsonify(parsed_response1)
 
+
 @from_back_routes.route('/')
 def land_page():
-    return render_template("index.html", message = "A datascience API for serving up cannabis strains to a webdev team")
+    return render_template("index.html", message="A datascience API for serving up cannabis strains to a webdev team")
+
 
 @from_back_routes.route('/references')
 def refer_page():
-    return render_template("references.html", message = "A datascience API for serving up cannabis strains to a webdev team")
+    return render_template("references.html", message="A datascience API for serving up cannabis strains to a webdev team")
