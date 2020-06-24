@@ -127,12 +127,8 @@ def clean_response(recs, userID):
 
     return cleaned
 
-<<<<<<< HEAD
 @from_back_routes.route('/send', methods = ["POST"])
-=======
-@from_back_routes.route('/send/', methods = ["POST"])
 @cross_origin()
->>>>>>> c1913d5cb66ffd223b8b1cc1e64d9a877543b39b
 def parse_json():
     print('Fetching payload')
     pyld = request.get_json()
