@@ -2,7 +2,7 @@
 import requests
 import json
 from flask import Blueprint, request, jsonify, render_template, Flask
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import pandas as pd
 import re
 import os
@@ -20,6 +20,7 @@ import pickle
 # *************************************************************************** #
 # Activating CORS
 app = Flask(__name__)
+app.config['CORS_HEADERS'] = 'Content-Type'
 cors = CORS(app)
 # *************************************************************************** #
 
@@ -122,9 +123,12 @@ def clean_response(recs, userID):
     for f in features:
         cleaned[f] = temp[f]
 
+    #print(cleaned)
+
     return cleaned
 
 @from_back_routes.route('/send/', methods = ["POST"])
+@cross_origin()
 def parse_json():
     print('Fetching payload')
     pyld = request.get_json()
@@ -140,7 +144,25 @@ def parse_json():
 
     print('Sending response')
 
-    return jsonify(clean_recs)
+    #print(clean_recs)
+
+    #print(jsonify(clean_recs))
+
+    # json_recs = jsonify(
+    #     UserID = clean_recs['UserID'],
+    #     Strain = clean_recs['Strain'],
+    #     Type = clean_recs['Type'],
+    #     Effects = clean_recs['Effects'],
+    #     Flavor = clean_recs['Flavor'],
+    #     Description = clean_recs['Description']
+    # )
+
+    response = app.response_class(
+        json.dumps(clean_recs, sort_keys = False, indent = 4),
+        mimetype = app.config['JSONIFY_MIMETYPE']
+    )
+
+    return response
 
 @from_back_routes.route('/json')
 def parse_json2():
