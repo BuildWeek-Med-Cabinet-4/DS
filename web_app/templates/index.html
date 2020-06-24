@@ -11,34 +11,51 @@
 
     <p>{{ message }}</p>
 
+    <p>This API receives user inputs as a json payload, processes that payload using a natural language processing model, and returns a recommended cannabis strain as a json object. </p>
+
     <br>
 
-    <h4>Address</h4>
+    <h4>Usage</h4>
+
+    <br>
+
+    <h6>Base URL</h6>
 
     <a href=" https://medicabi.herokuapp.com/" style="color:#008000"> MediCabi </a>
 
     <br>
     <br>
        
-    <h4>Usage</h4>
+    <h6>POST/<i>send</i></h6>
 
-    <p>Send a <b>POST request</b> to <b>https://medicabi.herokuapp.com/send</b> with a json payload structured like this:</p>
-
+    <p>Takes a json object containing user inputs, and returns a json object with recommended strain.</p>
+    <p><b>Request</b></p>
     </p>
     <div class="highlight highlight-source-python">
         <pre>
-        {
+    {
         <span class="pl-s">"UserID"</span>: <span class="pl-s">"dbkeyuser123"</span>, 
         <span class="pl-s">"Strain"</span>: <span class="pl-s">"User_Strain"</span>, 
         <span class="pl-s">"Type"</span>: <span class="pl-s">"Sativa"</span>,
         <span class="pl-s">"Effects"</span>: <span class="pl-s">"Uplifed, Happy, Relaxed, Energetic, Creative"</span>,
         <span class="pl-s">"Flavor"</span>: <span class="pl-s">"Spicy, Herbal, Sage, Woody"</span>,
         <span class="pl-s">"Description"</span>: <span class="pl-s">"a sativadominant hybrid bred in spain by medical seeds co the breeders claim to guard the secret genetics due to security reasons but regardless of its genetic heritage it is a thc powerhouse with a sweet and spicy bouquet subtle fruit flavors mix with an herbal musk to produce uplifting sativa effects one specific phenotype is noted for having a pungent odor that fills a room similar to burning incense"</span>
-        }</pre>
+    }</pre>
     </div>
-    <p>
-        You will receive a response, structured exactly the same, with a details on our recommended strain.  In the response <code>Strain</code> will list the recommended strain name and <code>Rating</code> is an average user rating from our sourced dataset.
-    </p>
+
+    <p><b>Response</b></p>
+
+    <div class="highlight highlight-source-python">
+        <pre>
+    {
+        <span class="pl-s">"UserID"</span>: <span class="pl-s">"dbkeyuser123"</span>, 
+        <span class="pl-s">"Strain"</span>: <span class="pl-s">"Golden-Pineapple"</span>, 
+        <span class="pl-s">"Type"</span>: <span class="pl-s">"hybrid"</span>,
+        <span class="pl-s">"Effects"</span>: <span class="pl-s">"Happy,Euphoric,Uplifted,Relaxed,Creative"</span>,
+        <span class="pl-s">"Flavor"</span>: <span class="pl-s">"Pineapple,Tropical,CitrusSpicy, Herbal, Sage, Woody"</span>,
+        <span class="pl-s">"Description"</span>: <span class="pl-s">"Golden Pineapple is a hybrid cross between Golden Goat and Pineapple Kush that delivers creative, uplifting effects with a fruity, tropical flavor. Its aroma is remarkably similar to sour pineapple, providing a flavorful escape from stress, anxiety, and depression. Golden Pineapple’s engaged, active effects will give you the energy you need to keep going throughout your day, although in larger doses, it can be difficult to direct that focus effectively."</span>
+    }</pre>
+    </div>
 
 
 {% endblock %}
