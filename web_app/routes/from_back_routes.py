@@ -122,7 +122,7 @@ def clean_response(recs, userID):
     for f in features:
         cleaned[f] = temp[f]
 
-    return json.dumps(cleaned)
+    return cleaned
 
 @from_back_routes.route('/send/', methods = ["POST"])
 def parse_json():
@@ -140,7 +140,7 @@ def parse_json():
 
     print('Sending response')
 
-    return clean_recs
+    return jsonify(clean_recs)
 
 @from_back_routes.route('/json')
 def parse_json2():
