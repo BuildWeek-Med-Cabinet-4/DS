@@ -1,7 +1,8 @@
 
 import requests
 import json
-from flask import Blueprint, request, jsonify, render_template 
+from flask import Blueprint, request, jsonify, render_template, Flask
+from flask_cors import CORS
 import pandas as pd
 import re
 import os
@@ -16,6 +17,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 # Deployment
 import pickle
+# *************************************************************************** #
+# Activating CORS
+app = Flask(__name__)
+cors = CORS(app)
 # *************************************************************************** #
 
 from_back_routes = Blueprint("from_back_routes", __name__)
