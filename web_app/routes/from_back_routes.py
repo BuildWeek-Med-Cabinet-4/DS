@@ -124,7 +124,7 @@ def clean_response(recs, userID):
 
     return cleaned
 
-@from_back_routes.route('/send/', methods = ["POST"])
+@from_back_routes.route('/send', methods = ["POST"])
 def parse_json():
     print('Fetching payload')
     pyld = request.get_json()
@@ -135,7 +135,7 @@ def parse_json():
     print('Processing payload')
     recs = find_rec_strains(preprocessed)
 
-    print('Preparing repsonse')
+    print('Preparing response')
     clean_recs = clean_response(recs, pyld['UserID'])
 
     print('Sending response')
