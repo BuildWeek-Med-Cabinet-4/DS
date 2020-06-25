@@ -91,14 +91,7 @@ def find_rec_strains(p_strain):
     This function takes in a preprocessed JSON from preprocess_strain(strain).
     It creates a JSON containing info on the 5 most similar strains
     """
-
-    # vect_path, df_path, dtm_path = safe_paths()
-
-    # # load the model from disk
-    # pickled_vectorizer = pickle.load(open(vect_path, 'rb'))
-    # strain_list = pd.read_pickle(df_path)
-    # pickled_dtm = pickle.load(open(dtm_path, 'rb'))
-
+    
     # Transforms preprocessed strain
     trans_strain = PICKLED_VECT.transform(
         p_strain['combined_text'])
@@ -120,7 +113,7 @@ def find_rec_strains(p_strain):
 
 
 def clean_response(recs, userID):
-    features = DF_FEATURES
+    features = DF_FEATURES.copy()
     features.insert(0, 'UserID')
 
     temp = json.loads(recs)
@@ -130,8 +123,6 @@ def clean_response(recs, userID):
 
     for f in features:
         cleaned[f] = temp[f]
-
-    # print(cleaned)
 
     return cleaned
 
@@ -151,19 +142,6 @@ def parse_json():
     clean_recs = clean_response(recs, pyld['UserID'])
 
     print('Sending response')
-
-    # print(clean_recs)
-
-    # print(jsonify(clean_recs))
-
-    # json_recs = jsonify(
-    #     UserID = clean_recs['UserID'],
-    #     Strain = clean_recs['Strain'],
-    #     Type = clean_recs['Type'],
-    #     Effects = clean_recs['Effects'],
-    #     Flavor = clean_recs['Flavor'],
-    #     Description = clean_recs['Description']
-    # )
 
     response = app.response_class(
         json.dumps(clean_recs, sort_keys=False, indent=4),
